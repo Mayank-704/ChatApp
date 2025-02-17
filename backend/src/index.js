@@ -2,6 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
  import cookieParser from "cookie-parser";
 
+ import messageRoutes from "./routes/message.routes.js"
 import authRoutes from "./routes/auth.routes.js" 
 import { connectDB } from "./lib/db.js";
 
@@ -15,6 +16,7 @@ app.use(express.json())//this middleware allow us to extract data from req in js
 const PORT = process.env.PORT;
 
 app.use("/api/auth",authRoutes)
+app.use("api/message",messageRoutes)
 
 
 app.listen(PORT,()=>{
