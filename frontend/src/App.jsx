@@ -9,6 +9,7 @@ import SignupPage from './pages/SignupPage'
 import ProfilePage from './pages/ProfilePage'
 import { useAuthStore } from './store/useAuthStore'
 import { useEffect } from 'react'
+import {Toaster} from "react-hot-toast"
 
 function App() {
 
@@ -38,7 +39,7 @@ function App() {
         <Route path="/profile" element = {authUser? <ProfilePage/>: <Navigate to="/login"/>} />
         <Route path="/setting" element = {<SettingPage/>} />
       </Routes>
-
+      <Toaster/>
       </div>
   )
 }
