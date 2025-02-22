@@ -11,9 +11,11 @@ export const useAuthStore = create((set) => ({
   isCheckingAuth: true,
 
   checkAuth: async () => {
+    set({isCheckingAuth: true})
     try {
-      const res = await axiosInstance.get("/auth/check");
-      set({ authUser: res.data });
+      // const res = await axiosInstance.get("/auth/check");
+      const storedUser = localStorage.getItem("authUser")
+      set({ authUser: JSON.parse(storedUser) });
     } catch (error) {
       console.log("Error in check-auth:", error);
       set({ authUser: null });
@@ -26,6 +28,7 @@ export const useAuthStore = create((set) => ({
     try {
       const res = await axiosInstance.post("/auth/signup", formData);
       set({ authUser: res.data });
+      localStorage.setItem("authUser",JSON.stringify(res.data));
       toast.success("Account created successfully");
     } catch (error) {
       // toast.error(error.response.data.message)
@@ -39,6 +42,7 @@ export const useAuthStore = create((set) => ({
     try {
       await axiosInstance.post("/auth/logout");
       set({ authUser: null });
+      localStorage.removeItem("authUser")
       toast.success("Logged out successfully");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -51,6 +55,7 @@ export const useAuthStore = create((set) => ({
     try {
         const res = await axiosInstance.post("/auth/login",formData)
         set({authUser: res.data })
+        localStorage.setItem("authUser",JSON.stringify(res.data))
      toast.success("Logged in Successfully")
     } catch (error) {
          console.log(error);
@@ -59,4 +64,20 @@ export const useAuthStore = create((set) => ({
         set({isLoggingIn: false})
     }
   },
+
+  updateProfile: async (data)=>{
+    set({isUpdatingProfile: true});
+    try {
+      const res = await axiosInstance.put("/auth/update-profile",data);
+      set({authUser: res.data});
+      localStorage.setItem("authUser",JSON.stringify(res.data))
+      toast.success("Profile updated successfully")
+    } catch (error) {
+      console.log("Error while updating Profile",error);
+      toast.error("problem while updating profile")
+    }finally{
+       set({isUpdatingProfile: false})
+    }
+  }
+
 }));

@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore"
+import {Link} from "react-router-dom"
 
 function LoginPage() {
   // const [showPassword,setShowPassword] = useState();
@@ -53,7 +54,7 @@ function LoginPage() {
           </button>
         </form>
         <p className="text-sm text-center text-gray-600">
-          If you do not have an account, <a href="/signup" className="text-indigo-600 hover:text-indigo-500">Sign up</a>
+          If you do not have an account, <Link to="/signup" className="text-indigo-600 hover:text-indigo-500">Sign up</Link>
         </p>
       </div>
     </div>
