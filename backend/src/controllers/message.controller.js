@@ -19,12 +19,12 @@ export const getMessages = async (req, res) => {
     const { id: userToChatId } = req.params;
     const userId = req.user._id;
 
-    const messages = Message.find({
+    const messages = await Message.find({
       $or: [
         { senderId: userId, recieverId: userToChatId },
         { senderId: userToChatId, recieverId: userId },
       ],
-    });
+    }).lean();
 
     res.status(200).json(messages);
   } catch (error) {
@@ -56,7 +56,7 @@ export const sendMessage = async (req, res) => {
 
     await newMessage.save();
 
-    res.staus(200).json(newMessage);
+    res.status(200).json(newMessage);
 
     //todo: Real Time functionality with socket.io
   } catch (error) {
