@@ -1,14 +1,16 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
+import io from "socket.io-client"
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set,get) => ({
   authUser: null,
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
  onlineUsers: [],
   isCheckingAuth: true,
+  socket: null,
 
   checkAuth: async () => {
     set({isCheckingAuth: true})
@@ -44,6 +46,7 @@ export const useAuthStore = create((set) => ({
       set({ authUser: null });
       localStorage.removeItem("authUser")
       toast.success("Logged out successfully");
+      get().disconnectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
       console.log(error);
@@ -57,6 +60,7 @@ export const useAuthStore = create((set) => ({
         set({authUser: res.data })
         localStorage.setItem("authUser",JSON.stringify(res.data))
      toast.success("Logged in Successfully")
+     get().connectSocket();
     } catch (error) {
          console.log(error);
         //  toast.error(error.response.data.message)
@@ -78,6 +82,30 @@ export const useAuthStore = create((set) => ({
     }finally{
        set({isUpdatingProfile: false})
     }
+  },
+
+  connectSocket: ()=>{
+    const {authUser} = get();
+    if (!authUser || get().socket?.connected) return;
+     const socket = io("http://localhost:5001",{
+      query:{
+        userId: authUser._id
+      }
+     });
+    
+     socket.connect();
+     set({socket: socket});
+     socket.on("getOnlineUsers",(userIds)=>{
+      set({onlineUsers: userIds});
+     })
+     console.log("user conneceted", socket.id)
+     
+  },
+
+  disconnectSocket: ()=>{
+   if(get().socket?.connected) {
+    get().socket.disconnect()};
+    console.log("User Disconnected")
   }
 
 }));
