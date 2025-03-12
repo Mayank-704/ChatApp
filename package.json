@@ -1,0 +1,24 @@
+{
+  "name": "chatapp-1",
+  "version": "1.0.0",
+  "description": "A full-stack web application for chatting, sending images and connecting with other people.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "test": "npm run start --prefix backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mayank-704/ChatApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mayank-704/ChatApp/issues"
+  },
+  "homepage": "https://github.com/Mayank-704/ChatApp#readme",
+  "dependencies": {
+    "chatapp-1": "file:"
+  }
+}

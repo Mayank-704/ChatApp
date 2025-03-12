@@ -7,6 +7,8 @@ import { app, server} from "./lib/Socket.js"
 import authRoutes from "./routes/auth.routes.js" 
 import { connectDB } from "./lib/db.js";
 
+import path from "path"
+
 dotenv.config();
 
 app.use(cookieParser());
@@ -20,6 +22,14 @@ const PORT = process.env.PORT;
 
 app.use("/api/auth",authRoutes)
 app.use("/api/messages",messageRoutes)
+
+if(process.env.NODE_ENVIRONMENT === "production"){
+    app.use(express.static(path.join(__dirname,"../frontend/dist")));
+
+    app.get("*",(req,res)=>{
+        res.sendFile(path.join(__dirname,"../frontens","dist","index.html"));
+    })
+}
 
 
 server.listen(PORT,()=>{
